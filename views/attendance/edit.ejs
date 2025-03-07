@@ -1,0 +1,55 @@
+
+
+<div class="container mt-4">
+    <h2 class="text-center">Edit Attendance</h2>
+
+
+    <div class="card shadow p-4">
+        <form action="/attendance/<%= attendance._id %>?_method=PUT" method="POST" class="validated-form" novalidate>
+            <% 
+                const formatTime = (time) => {
+                    if (!time) return '';
+                    const date = new Date(time);
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    return `${hours}:${minutes}`;
+                };
+            %>
+            <div class="mb-3">
+                <label for="employee" class="form-label">Employee Name</label>
+                <input type="hidden" name="employee" value="<%= attendance.employee._id %>">
+                <input type="text" id="employee" class="form-control" value="<%= attendance.employee.name %>" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" name="date" id="date" class="form-control" value="<%= attendance.date.toISOString().split('T')[0] %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="checkInTime" class="form-label">Check-in Time</label>
+                <input type="time" name="checkInTime" id="checkInTime" class="form-control" value="<%= formatTime(attendance.checkInTime) %>">
+            </div>
+
+            <div class="mb-3">
+                <label for="checkOutTime" class="form-label">Check-out Time</label>
+                <input type="time" name="checkOutTime" id="checkOutTime" class="form-control" value="<%= formatTime(attendance.checkOutTime) %>">
+            </div>
+
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-control" required>
+                    <option value="Present" <%= attendance.status === 'Present' ? 'selected' : '' %>>Present</option>
+                    <option value="Late" <%= attendance.status === 'Late' ? 'selected' : '' %>>Late</option>
+                    <option value="Absent" <%= attendance.status === 'Absent' ? 'selected' : '' %>>Absent</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100">Update Attendance</button>
+        </form>
+        
+        <div class="text-center mt-3">
+            <a href="/attendance" class="btn btn-secondary">Back to Attendance List</a>
+        </div>
+    </div>
+</div>

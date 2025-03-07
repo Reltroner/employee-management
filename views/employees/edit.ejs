@@ -1,0 +1,54 @@
+<div class="container mt-4">
+    <h2 class="text-center">Edit Employee</h2>
+
+    <%- include('../layouts/partials/alert') %>
+
+    <div class="card shadow p-4">
+        <form action="/employees/<%= employee._id %>?_method=PUT" method="POST" class="validated-form" novalidate >
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" name="name" id="name" class="form-control" value="<%= employee.name %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" id="email" class="form-control" value="<%= employee.email %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" name="phone" id="phone" class="form-control" value="<%= employee.phone %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="department" class="form-label">Department</label>
+                <input type="text" name="department" id="department" class="form-control" value="<%= employee.department %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="position" class="form-label">Position</label>
+                <input type="text" name="position" id="position" class="form-control" value="<%= employee.position %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <textarea name="address" id="address" class="form-control" rows="3" required><%= employee.address %></textarea>
+            </div>
+
+            <!-- Status Selection -->
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-select" required>
+                    <option value="Active" <%= employee.status === 'Active' ? 'selected' : '' %>>Active</option>
+                    <option value="Inactive" <%= employee.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100">Update Employee</button>
+        </form>
+        
+        <div class="text-center mt-3">
+            <a href="/employees" class="btn btn-secondary w-100">Back to Employee List</a>
+        </div>
+    </div>
+</div>

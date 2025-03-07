@@ -1,0 +1,42 @@
+<% layout('layouts/app') %>
+
+<div class="container mt-4">
+    <h2 class="text-center">Add New Employee</h2>
+
+    <%- include('layouts/partials/alert') %>
+
+    <div class="card shadow p-4">
+        <form action="/employees" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" name="name" id="name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="position" class="form-label">Position</label>
+                <input type="text" name="position" id="position" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" id="email" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" name="phone" id="phone" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <textarea name="address" id="address" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Add Employee</button>
+        </form>
+        
+        <div class="text-center mt-3">
+            <a href="/employees" class="btn btn-secondary">Back to Employee List</a>
+        </div>
+    </div>
+</div>

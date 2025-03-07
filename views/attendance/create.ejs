@@ -1,0 +1,53 @@
+
+
+<div class="container mt-4">
+    <h2 class="text-center">Add New Attendance</h2>
+
+    <div class="card shadow p-4">
+        <form action="/attendance" method="POST">
+            <div class="mb-3">
+                <label for="employee" class="form-label">Select Employee</label>
+                <select name="employee" id="employee" class="form-control" required>
+                    <option value="" disabled selected>Select an employee</option>
+                    <% if (employees && employees.length > 0) { %>
+                        <% employees.forEach(employee => { %>
+                            <option value="<%= employee._id %>"><%= employee.name %></option>
+                        <% }) %>
+                    <% } else { %>
+                        <option disabled>No employees found</option>
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" name="date" id="date" class="form-control" value="<%= new Date().toISOString().split('T')[0] %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="checkInTime" class="form-label">Check-in Time</label>
+                <input type="time" name="checkInTime" id="checkInTime" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="checkOutTime" class="form-label">Check-out Time</label>
+                <input type="time" name="checkOutTime" id="checkOutTime" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select name="status" id="status" class="form-control" required>
+                    <option value="Present">Present</option>
+                    <option value="Late">Late</option>
+                    <option value="Absent">Absent</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Add Attendance</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <a href="/attendance" class="btn btn-secondary">Back to Attendance List</a>
+        </div>
+    </div>
+</div>
