@@ -23,28 +23,37 @@ git clone https://github.com/yourusername/employee-management.git
 cd employee-management
 ```
 
+### 2. Initialize package.json
+```bash
+npm init -y
+```
+
 ### 2. Install dependencies
 ```bash
-npm install
+npm i express mongoose ejs ejs-mate method-override joi express-session connect-flash passport passport-local-mongoose multer
 ```
 
 ### 3. Set up environment variables
 Create a `.env` file in the root directory and configure the following:
 ```
-DATABASE_URL=mongodb://localhost:27017/employee-management
+DATABASE_URL=mongodb://127.0.0.1/employee-attendance
 SECRET=yourSecretKey
 ```
 
 ### 4. Seed initial data (optional)
 If you want to seed some sample data, run:
 ```bash
-node seeds/index.js
+node seeds/employee.js
+```
+and
+```bash
+node seeds/attendance.js
 ```
 
 ### 5. Run the server
 Start the development server:
 ```bash
-npm run dev
+nodemon app.js
 ```
 The app will run on `http://localhost:3000`
 
