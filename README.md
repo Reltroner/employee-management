@@ -51,7 +51,7 @@ node seeds/attendance.js
 ```
 
 ### 5. Run the server
-Start the development server:
+Start the development server after changging package.json to "main": "app.js":
 ```bash
 nodemon app.js
 ```
