@@ -1,10 +1,7 @@
 ---
-
-```markdown
 # 💼 Employee Management System
 
 A full-stack web application designed to manage employee data and attendance seamlessly. Built with **Node.js, Express.js, EJS, and MongoDB**, this system allows admins to handle user authentication, attendance tracking, employee records, and reporting — all in one clean dashboard interface.
-
 ---
 
 ## 🌟 Highlights
