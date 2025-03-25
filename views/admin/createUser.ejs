@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create New User</title>
+  </head>
+  <body>
+    <h1>Create New User</h1>
+    <form action="/admin/create-user" method="POST">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" name="username" required />
+      </div>
+
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" name="email" required />
+      </div>
+
+      <div>
+        <label for="role">Role:</label>
+        <select name="role">
+          <option value="Admin">Admin</option>
+          <option value="Manager">Manager</option>
+          <option value="Employee" selected>Employee</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="password">Default Password:</label>
+        <input type="password" name="password" required />
+      </div>
+
+      <button type="submit">Create User</button>
+    </form>
+  </body>
+</html>

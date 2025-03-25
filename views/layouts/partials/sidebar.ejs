@@ -1,0 +1,38 @@
+<!-- views/layouts/partials/sidebar.ejs -->
+<div id="sidebar-wrapper" class="border-end bg-light">
+    <div class="sidebar-heading p-3">
+      <h5>Welcome, <%= user ? user.username : 'Guest' %></h5>
+    </div>
+    <div class="list-group list-group-flush">
+      <a href="/" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+  
+      <!-- ADMIN SECTION -->
+      <% if (user && user.role === 'Admin') { %>
+        <a href="/admin/user-list" class="list-group-item bg-light">Manage Users</a>
+        <a href="/employees" class="list-group-item bg-light">Manage Employees</a>
+        <a href="/attendance" class="list-group-item bg-light">Manage Attendance</a>
+        <a href="/admin/reports" class="list-group-item bg-light">View Reports</a>
+      <% } %>
+  
+      <!-- MANAGER SECTION -->
+      <% if (user && user.role === 'Manager') { %>
+        <a href="/team" class="list-group-item bg-light">My Team</a>
+        <a href="/employees" class="list-group-item bg-light">View Employees</a>
+        <a href="/attendance" class="list-group-item bg-light">Attendance</a>
+      <% } %>
+  
+      <!-- EMPLOYEE SECTION -->
+      <% if (user && user.role === 'Employee') { %>
+        <a href="/attendance/my" class="list-group-item bg-light">My Attendance</a>
+        <a href="/profile" class="list-group-item bg-light">My Profile</a>
+      <% } %>
+  
+      <!-- Logout/Login -->
+      <% if (user) { %>
+        <a href="/auth/logout" class="list-group-item bg-light">Logout</a>
+      <% } else { %>
+        <a href="/auth/login" class="list-group-item bg-light">Login</a>
+      <% } %>
+    </div>
+  </div>
+  

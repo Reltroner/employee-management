@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Employee = require('../models/employee');
 const employees = require('../controllers/employees');
+const checkRole = require('../middlewares/checkRole');
 const isAuth = require('../middlewares/isAuth');
 const isAuthor = require('../middlewares/isAuthor');
 const isValidObjectId = require('../middlewares/isValidObjectId');

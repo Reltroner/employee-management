@@ -40,6 +40,11 @@ const employeeSchema = new mongoose.Schema({
         enum: ['Active', 'Inactive'],
         default: 'Active'
     },
+    manager: {  // Tambahkan ini jika Anda ingin menandai manager
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // atau 'Employee', bergantung mana yang Anda pilih untuk mewakili manager
+        default: null
+    },
     attendance: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Attendance'

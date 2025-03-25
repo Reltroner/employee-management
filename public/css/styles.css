@@ -57,3 +57,23 @@ form .form-control {
         padding: 0 15px;
     }
 }
+
+/* Lebar default sidebar */
+#sidebar-wrapper {
+    width: 250px;
+    min-height: 100vh;
+  }
+  
+  /* Jika #wrapper punya class toggled, geser sidebar ke kiri */
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -250px;
+    transition: margin 0.25s ease-out;
+  }
+  
+  /* Konten bergeser, optional jika mau */
+  #wrapper.toggled #page-content-wrapper {
+    width: 100%;
+    margin: 0;
+    transition: margin 0.25s ease-out;
+  }
+  

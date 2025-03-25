@@ -133,7 +133,7 @@ module.exports.updateAttendance = async (req, res) => {
     );
 
     req.flash('success', 'Attendance record updated successfully!');
-    res.redirect(`/attendance/${id}`);
+    res.redirect(`/attendance`);
 };
 
 
@@ -145,3 +145,45 @@ module.exports.deleteAttendance = async (req, res) => {
     res.redirect('/attendance'); // Penting: pastikan ada res.redirect atau res.json!
 };
 
+module.exports.roleCheck = async (req, res) => {
+    if (req.user.role === 'Admin') {
+        // Admin => semua record
+        return attendance.indexAll(req, res);
+    } 
+    if (req.user.role === 'Manager') {
+        // Manager => attendance untuk karyawan di tim-nya
+        return attendance.indexManagerTeam(req, res);
+    } 
+    // Employee => attendance untuk dirinya sendiri
+    return attendance.indexEmployee(req, res);
+}
+
+module.exports.indexAll = async (req, res) => {
+    // Menampilkan seluruh attendance
+    const attendanceRecords = await Attendance.find({}).populate('employee');
+    res.render('attendance/index', { attendanceRecords });
+  };
+
+module.exports.indexManagerTeam = async (req, res) => {
+    // Menampilkan attendance karyawan yang manager-nya = req.user._id
+    // Caranya: cari semua employee yang manager = req.user._id, lalu filter attendance-nya
+    const employeesInTeam = await Employee.find({ manager: req.user._id });
+    const employeeIds = employeesInTeam.map(emp => emp._id);
+  
+    const attendanceRecords = await Attendance.find({ employee: { $in: employeeIds } }).populate('employee');
+    res.render('attendance/index', { attendanceRecords });
+};
+
+  module.exports.indexEmployee = async (req, res) => {
+    // Menampilkan attendance user itu sendiri
+    // Agar match, Anda perlu mengaitkan user dengan employee, misalnya user punya field employeeId
+    // Atau sebaliknya. Jika tidak ada, Anda perlu logika lain (misalnya email)
+    // Misalnya, jika user punya employeeProfile = <ObjectId>:
+    
+    // 1) Pastikan user -> employeeProfile
+    // 2) Lalu:
+    const attendanceRecords = await Attendance.find({ employee: req.user.employeeProfile })
+        .populate('employee');
+    res.render('attendance/index', { attendanceRecords });
+  };
+  

@@ -28,6 +28,10 @@ module.exports.createEmployee = async (req, res) => {
 module.exports.showEmployee = wrapAsync(async (req, res) => {
     console.log("Fetching employee data...");
     const employee = await Employee.findById(req.params.id);
+    if (req.user.role === 'Manager' && String(employee.manager) !== String(req.user._id)) {
+        req.flash('error_msg', 'Not allowed to view this employee!');
+        return res.redirect('/employees');
+    }
     if (!employee) {
         req.flash('error', 'Employee not found!');
         return res.redirect('/employees');
@@ -53,7 +57,7 @@ module.exports.updateEmployee = async (req, res) => {
         const { name, email, phone, department, position, address, status } = req.body;
         await Employee.findByIdAndUpdate(req.params.id, { name, email, phone, department, position, address, status });
         req.flash('success', 'Employee updated successfully!');
-        res.redirect(`/employees/${req.params.id}`);
+        res.redirect(`/employees`);
     } catch (error) {
         console.error('Error updating employee:', error);
         req.flash('error', 'Failed to update employee.');

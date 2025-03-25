@@ -22,6 +22,19 @@
                 <label for="confirmPassword" class="form-label">Confirm Password</label>
                 <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required>
             </div>
+
+            <!-- Hanya tampilkan dropdown role jika user yang login sekarang adalah Admin -->
+            <% if (user && user.role === 'Admin') { %>
+              <div class="mb-3">
+                  <label for="role" class="form-label">Role</label>
+                  <select name="role" id="role" class="form-select" required>
+                      <option value="Admin">Admin</option>
+                      <option value="Manager">Manager</option>
+                      <option value="Employee" selected>Employee</option>
+                  </select>
+              </div>
+            <% } %>
+
             <button type="submit" class="btn btn-success w-100">Register</button>
         </form>
 
