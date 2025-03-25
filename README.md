@@ -85,10 +85,10 @@ Visit the app at `http://localhost:3000`
 > 
 
 ### ➕ Add Attendance Form
-![Add Attendance Form](./screenshots/form-add-attendance.png)
+![Add Attendance Form](public/screenshots/form-add-attendance.png)
 
 ### 📊 Attendance Table
-![Attendance Table](./screenshots/attendance-table.png)
+![Attendance Table](public/screenshots/attendance-table.png)
 
 
 ---
