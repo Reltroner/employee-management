@@ -10,7 +10,6 @@ A full-stack web application designed to manage employee data and attendance sea
 - 📋 **Attendance CRUD System** (Check-In, Check-Out, Status)
 - 👥 **Employee Management** with detailed profiles
 - 🧠 **Validation & Feedback** using Joi + Flash Messages
-- 📁 **File Uploads** with Multer
 - 🎨 **Responsive UI** with Bootstrap + EJS
 
 ---
