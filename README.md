@@ -1,25 +1,38 @@
-# Employee Management System
+---
+# 💼 Employee Management System
 
-## 📚 Introduction
-Employee Management System is a full-stack web application designed to streamline employee and attendance management. Built using modern web technologies, this system allows for CRUD operations (Create, Read, Update, Delete) on employee records and attendance logs.
+A full-stack web application designed to manage employee data and attendance seamlessly. Built with **Node.js, Express.js, EJS, and MongoDB**, this system allows admins to handle user authentication, attendance tracking, employee records, and reporting — all in one clean dashboard interface.
+---
+
+## 🌟 Highlights
+
+- 🔐 **Secure Authentication** (Passport.js + Sessions)
+- 📋 **Attendance CRUD System** (Check-In, Check-Out, Status)
+- 👥 **Employee Management** with detailed profiles
+- 🧠 **Validation & Feedback** using Joi + Flash Messages
+- 🎨 **Responsive UI** with Bootstrap + EJS
+
+---
 
 ## 🚀 Tech Stack
-- **Backend:** Node.js, Express.js
-- **Frontend:** EJS, EJS-Mate, Bootstrap
-- **Database:** MongoDB (with Mongoose)
-- **Authentication:** Passport.js, Passport-Local-Mongoose
-- **Validation:** Joi
-- **File Uploads:** Multer
-- **Session & Flash Messages:** Express-Session, Connect-Flash
-- **HTTP Method Override:** Method-Override
 
-## 🏗️ Setup & Installation
+| Layer       | Technology                          |
+|-------------|-------------------------------------|
+| Backend     | Node.js, Express.js                 |
+| Frontend    | EJS, EJS-Mate, Bootstrap            |
+| Database    | MongoDB with Mongoose               |
+| Auth        | Passport.js, Passport-Local-Mongoose|
+| Validation  | Joi                                 |
+| Uploads     | Multer                              |
+| Session     | express-session, connect-flash      |
 
-Follow these steps to set up the project locally:
+---
+
+## 🛠️ Installation & Setup
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/employee-management.git
+git clone https://github.com/RaidanRR/employee-management.git
 cd employee-management
 ```
 
@@ -28,53 +41,75 @@ cd employee-management
 npm install
 ```
 
-### 3. Set up environment variables
-Create a `.env` file in the root directory and configure the following:
+### 3. Create `.env` file
 ```
-DATABASE_URL=mongodb://localhost:27017/employee-management
+DATABASE_URL=mongodb://127.0.0.1/employee-attendance
 SECRET=yourSecretKey
 ```
 
-### 4. Seed initial data (optional)
-If you want to seed some sample data, run:
+### 4. (Optional) Seed sample data
 ```bash
-node seeds/index.js
+node seeds/employee.js
+node seeds/attendance.js
 ```
 
-### 5. Run the server
-Start the development server:
+### 5. Run the development server
 ```bash
-npm run dev
-```
-The app will run on `http://localhost:3000`
-
-## 📦 Project Structure
-```
-.
-├── public/          # Static assets (CSS, JS, images)
-├── routes/          # Express routes
-├── models/          # Mongoose models
-├── views/           # EJS templates
-├── seeds/           # Seed data scripts
-├── app.js           # Main application file
-├── .env             # Environment variables
-└── package.json     # Project dependencies
+nodemon app.js
 ```
 
-## 📄 Features
-- Employee CRUD functionality
-- Attendance logging (Check-in, Check-out)
-- User authentication and authorization
-- Real-time form validation
-- Flash messages for user feedback
-
-## ✅ Contributing
-Contributions are welcome! Feel free to fork the repo and submit pull requests.
-
-## 📝 License
-This project is licensed under the MIT License.
+Visit the app at `http://localhost:3000`
 
 ---
 
-Looking forward to building this project together! 💡
+## 🗂️ Folder Structure
+```
+├── app.js                 # Entry Point
+├── models/                # Mongoose Schemas
+├── routes/                # Express Routers
+├── views/                 # EJS Templates
+├── public/                # Static Assets
+├── seeds/                 # Seed Scripts
+├── .env                   # Environment Variables
+└── package.json           # Project Metadata
+```
+
+---
+
+## 📸 Preview
+
+> **Admin Dashboard**
+> - Manage Employees & Attendance  
+> - View status (Present, Absent, Late)  
+> - Clean Bootstrap layout  
+> 
+
+### ➕ Add Attendance Form
+![Add Attendance Form](./screenshots/form-add-attendance.png)
+
+### 📊 Attendance Table
+![Attendance Table](./screenshots/attendance-table.png)
+
+
+---
+
+## 🤝 Collaboration
+
+Open to contributions, feedback, and collaboration.  
+If you're a recruiter or tech lead, feel free to explore the code and see how I work.  
+If you're a developer, feel free to fork, enhance, and scale it.
+
+---
+
+## 📄 License
+
+Licensed under the [MIT License](LICENSE)
+
+---
+
+### 👋 Let’s Connect  
+This project is part of my personal full-stack journey and self-branding initiative: **Reltroner Studio**  
+Feel free to reach out via email or [GitHub discussions](https://github.com/RaidanRR/employee-management/discussions)
+
+---
 
