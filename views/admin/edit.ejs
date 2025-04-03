@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || "Edit User" %></title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous"/>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Edit User</h1>
+
+    <form action="/admin/users/<%= user._id %>?_method=PUT" method="POST">
+      <!-- Profile Fields -->
+      <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        <input type="text" name="name" id="name" class="form-control" value="<%= user.profile?.name || '' %>" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="text" name="phone" id="phone" class="form-control" value="<%= user.profile?.phone || '' %>">
+      </div>
+
+      <div class="mb-3">
+        <label for="department" class="form-label">Department</label>
+        <input type="text" name="department" id="department" class="form-control" value="<%= user.profile?.department || '' %>" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="position" class="form-label">Position</label>
+        <input type="text" name="position" id="position" class="form-control" value="<%= user.profile?.position || '' %>" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea name="address" id="address" class="form-control" rows="3"><%= user.profile?.address || '' %></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select name="status" id="status" class="form-select">
+          <option value="Active" <%= user.profile?.status === 'Active' ? 'selected' : '' %>>Active</option>
+          <option value="Inactive" <%= user.profile?.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+        </select>
+      </div>
+
+      <!-- Account Info -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" id="email" class="form-control" value="<%= user.email %>" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" name="username" id="username" class="form-control" value="<%= user.username %>" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <select name="role" id="role" class="form-select" required>
+          <option value="Admin" <%= user.role === 'Admin' ? 'selected' : '' %>>Admin</option>
+          <option value="Manager" <%= user.role === 'Manager' ? 'selected' : '' %>>Manager</option>
+          <option value="Employee" <%= user.role === 'Employee' ? 'selected' : '' %>>Employee</option>
+        </select>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-between mt-4 mb-3">
+        <a href="/admin/users" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-warning">Update User</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

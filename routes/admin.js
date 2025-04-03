@@ -1,49 +1,82 @@
 // routes/admin.js
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user'); // Model User
+const admin = require('../controllers/admin');
 const isAuth = require('../middlewares/isAuth');
 const checkRole = require('../middlewares/checkRole');
 const wrapAsync = require('../utils/wrapAsync');
+const attendance = require('../controllers/attendance');
 
-// Render form untuk Admin create user baru
-router.get('/create-user', 
-  isAuth, 
-  checkRole(['Admin']), 
-  (req, res) => {
-    // Pastikan Anda memiliki view ejs misalnya 'admin/createUser.ejs'
-    res.render('admin/createUser', { title: 'Create New User' });
+// Admin Dashboard
+router.get('/dashboard/admin',
+  isAuth,
+  checkRole(['Admin']),
+  admin.renderAdminDashboard
+);
+
+// Admin routes
+router.get('/dashboard', isAuth, checkRole(['Admin']), (req, res) => {
+  res.redirect('/dashboard/admin');
 });
 
-// Proses pembuatan user baru oleh Admin
-router.post('/create-user', 
-  isAuth, 
-  checkRole(['Admin']), 
-  wrapAsync(async (req, res) => {
-    try {
-      const { username, email, role, password } = req.body;
+/* ===================================
+   USER MANAGEMENT ROUTES
+   =================================== */
 
-      // Pastikan 'role' termasuk di antara ['Admin', 'Manager', 'Employee']
-      if (!['Admin', 'Manager', 'Employee'].includes(role)) {
-        req.flash('error', 'Invalid role selected');
-        return res.redirect('/admin/create-user');
-      }
+// Index: Tampilkan semua user
+router.get('/users',
+  isAuth,
+  checkRole(['Admin']),
+  admin.index
+);
 
-      // Membuat user baru dengan Passport-Local-Mongoose
-      const newUser = new User({ username, email, role });
-      const registeredUser = await User.register(newUser, password);
 
-      req.flash('success', `User ${registeredUser.username} created successfully!`);
-      res.redirect('/dashboard'); // arahkan sesuai kebutuhan Anda
-    } catch (err) {
-      console.error('Error creating user:', err);
-      req.flash('error', err.message);
-      res.redirect('/admin/create-user');
-    }
-}));
+// Create: Form & Proses
+router.get('/create',
+  isAuth,
+  checkRole(['Admin']),
+  admin.renderCreateForm
+);
+router.post('/users',
+  isAuth,
+  checkRole(['Admin']),
+  wrapAsync(admin.createUser)
+);
+router.get('/user-created', (req, res) => {
+  const qrImage = req.session.qrImage;
+  req.session.qrImage = null; // Hapus setelah ditampilkan
+  res.render('admin/user-created', { qrImage });
+});
 
-router.get('/dashboard', isAuth, checkRole(['Admin']), (req, res) => {
-    res.render('admin/dashboard', { title: 'Admin Dashboard' });
-  });
+// Show: Detail user
+router.get('/users/:id',
+  isAuth,
+  checkRole(['Admin']),
+  wrapAsync(admin.showUser)
+);
+
+// Edit: Form & Update
+router.get('/users/:id/edit',
+  isAuth,
+  checkRole(['Admin']),
+  wrapAsync(admin.renderEditForm)
+);
+router.put('/users/:id',
+  isAuth,
+  checkRole(['Admin']),
+  wrapAsync(admin.updateUser)
+);
+
+// Delete: Form & Hapus
+router.get('/users/:id/delete',
+  isAuth,
+  checkRole(['Admin']),
+  wrapAsync(admin.renderDeleteForm)
+);
+router.delete('/users/:id',
+  isAuth,
+  checkRole(['Admin']),
+  wrapAsync(admin.deleteUser)
+);
 
 module.exports = router;

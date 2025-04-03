@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Attendance Log</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+  <h2 class="mb-4">Daily Attendance Log</h2>
+
+  <% if (attendanceRecords.length === 0) { %>
+    <div class="alert alert-warning">No attendance records found for today.</div>
+  <% } else { %>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Time</th>
+          <th>Location</th>
+          <th>QR Code</th>
+          <% if (user.role === 'Manager' || user.role === 'Admin') { %><th>Actions</th><% } %>
+        </tr>
+      </thead>
+      <tbody>
+        <% attendanceRecords.forEach((record, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= record.user.profile?.name || record.user.username %></td>
+            <td><%= record.user.role %></td>
+            <td><%= record.status %></td>
+            <td><%= new Date(record.date).toLocaleTimeString() %></td>
+            <td>
+              <%= record.location.latitude.toFixed(4) %>,
+              <%= record.location.longitude.toFixed(4) %>
+            </td>
+            <td><%= record.qrCodeUsed %></td>
+
+            <% if ((user.role === 'Manager' || user.role === 'Admin')) { %>
+              <td>
+                <% if (record.status === 'pending' && !record.confirmedByManager) { %>
+                  <form action="/attendance/<%= record.user._id %>/approve/<%= index %>?_method=POST" method="POST" style="display:inline-block">
+                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                  </form>
+                  <form action="/attendance/<%= record.user._id %>/reject/<%= index %>?_method=POST" method="POST" style="display:inline-block">
+                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                  </form>
+                <% } else { %>
+                  <span class="badge bg-secondary">Handled</span>
+                <% } %>
+              </td>
+            <% } %>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <a href="/dashboard" class="btn btn-secondary mt-3">← Back to Dashboard</a>
+</body>
+</html>

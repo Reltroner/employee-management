@@ -1,7 +1,7 @@
 <main class="container mt-4">
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <h2 class="mb-4">Tambah Karyawan</h2>
+            <h2 class="mb-4"> Add Employee</h2>
             
 
             <form action="/employees/create" method="POST"  class="validated-form mb-3" novalidate>
@@ -49,9 +49,12 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Tambah Karyawan</button>
-                <a href="/employees" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary w-100">+ Add Employee</button>
+                
             </form>
+            <div class="text-center mt-3">
+                <a href="/employees" class="btn btn-secondary w-100 mb-3">Back to Employee List</a>
+            </div>
         </div>
     </div>
 </main>

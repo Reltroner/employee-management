@@ -1,0 +1,71 @@
+<!-- views/dashboard/manager.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manager Dashboard</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+  <h2>Welcome, <%= user.profile.name %>!</h2>
+  <p class="text-muted">Role: <%= user.role %> | Department: <%= user.profile.department %></p>
+
+  <h4 class="mt-4">Today's Team Attendance</h4>
+  <% if (teamAttendance.length === 0) { %>
+    <div class="alert alert-warning">No assigned team or no attendance data yet.</div>
+  <% } else { %>
+    <table class="table table-bordered mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Location</th>
+          <th>QR Code</th>
+          <th>Confirmed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% teamAttendance.forEach((item, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= item.employee.user.profile.name %></td>
+            <td>
+              <% if (item.attendance) { %>
+                <%= item.attendance.status %>
+              <% } else { %>
+                <span class="text-danger">No data</span>
+              <% } %>
+            </td>
+            <td>
+              <% if (item.attendance && item.attendance.location) { %>
+                <%= item.attendance.location.latitude.toFixed(4) %>,
+                <%= item.attendance.location.longitude.toFixed(4) %>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+            <td><%= item.attendance?.qrCodeUsed || '-' %></td>
+            <td>
+              <% if (item.attendance?.confirmedByManager) { %>
+                <span class="badge bg-success">Confirmed</span>
+              <% } else if (item.attendance) { %>
+                <form method="POST" action="/attendance/<%= item.employee.user._id %>/approve/<%= item.employee.attendance.indexOf(item.attendance) %>?_method=POST" style="display:inline">
+                  <button class="btn btn-sm btn-success">Approve</button>
+                </form>
+                <form method="POST" action="/attendance/<%= item.employee.user._id %>/reject/<%= item.employee.attendance.indexOf(item.attendance) %>?_method=POST" style="display:inline">
+                  <button class="btn btn-sm btn-danger">Reject</button>
+                </form>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <a href="/dashboard" class="btn btn-secondary mt-4">Back to Dashboard</a>
+</body>
+</html>

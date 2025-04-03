@@ -1,0 +1,16 @@
+<!-- views/partials/sidebar-manager.ejs -->
+<div id="sidebar-wrapper" class="bg-light border-end">
+    <div class="sidebar-heading p-3 border-bottom fw-bold">
+      Welcome, <%= currentUser.profile?.name || currentUser.username %>
+    </div>
+    <div class="list-group list-group-flush">
+      <a href="/dashboard/manager" class="list-group-item list-group-item-action">📊 Dashboard</a>
+      <a href="/profile" class="list-group-item list-group-item-action">👤 My Profile</a>
+      <a href="/attendance/log" class="list-group-item list-group-item-action">📋 Team Attendance Log</a>
+      <a href="/attendance/scan" class="list-group-item list-group-item-action">📸 Scan QR Attendance</a>
+      <a href="/attendance" class="list-group-item list-group-item-action">🗂️ Manage Attendance</a>
+      <a href="/employees" class="list-group-item list-group-item-action">👥 My Team</a>
+      <a href="/logout" class="list-group-item list-group-item-action text-danger">🚪 Logout</a>
+    </div>
+  </div>
+  

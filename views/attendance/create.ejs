@@ -26,7 +26,8 @@
 
             <div class="mb-3">
                 <label for="checkInTime" class="form-label">Check-in Time</label>
-                <input type="time" name="checkInTime" id="checkInTime" class="form-control">
+                <input type="time" name="checkInTime" id="checkInTime" class="form-control" required>
+                <div class="invalid-feedback">Check-in time is required.</div>
             </div>
 
             <div class="mb-3">
@@ -43,7 +44,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Add Attendance</button>
+            <button type="submit" class="btn btn-primary w-100">+ Add Attendance</button>
         </form>
 
         <div class="text-center mt-3">
@@ -51,3 +52,5 @@
         </div>
     </div>
 </div>
+
+<script src="/js/validate-form.js"></script>

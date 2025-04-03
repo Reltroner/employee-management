@@ -1,0 +1,16 @@
+<div class="bg-light border-end" id="sidebar-wrapper">
+    <div class="sidebar-heading border-bottom bg-dark text-white p-3">
+      Welcome, <%= currentUser.profile?.name || currentUser.username %>
+    </div>
+    <div class="list-group list-group-flush">
+      <a href="/dashboard/admin" class="list-group-item list-group-item-action bg-light">📊 Dashboard</a>
+      <a href="/admin/users" class="list-group-item list-group-item-action bg-light">👤 Manage Users</a>
+      <a href="/employees" class="list-group-item list-group-item-action bg-light">👥 Manage Employees</a>
+      <a href="/manager" class="list-group-item list-group-item-action bg-light">🧑‍💼 Manage Managers</a>
+      <a href="/attendance" class="list-group-item list-group-item-action bg-light">🕒 Attendance Overview</a>
+      <a href="/attendance/log" class="list-group-item list-group-item-action bg-light">📝 Approval Log</a>
+      <a href="/report" class="list-group-item list-group-item-action bg-light">📄 View Reports</a>
+      <a href="/auth/logout" class="list-group-item list-group-item-action bg-light text-danger">🚪 Logout</a>
+    </div>
+  </div>
+  

@@ -12,7 +12,6 @@ const ExpressError = require('./utils/ErrorHandler');
 const errorHandler = require('./middlewares/errorHandler');
 const User = require('./models/user');
 
-
 const app = express();
 
 // Database connection
@@ -50,6 +49,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // Flash message middleware
 app.use((req, res, next) => {
+    res.locals.messages = req.flash();
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.currentUser = req.user;
@@ -68,6 +68,9 @@ const authRoutes = require('./routes/auth');
 const employeeRoutes = require('./routes/employees');
 const attendanceRoutes = require('./routes/attendance');
 const adminRoutes = require('./routes/admin');
+const managerRoutes = require('./routes/manager');
+const dashboardRoutes = require('./routes/dashboard');
+
 
 app.use('/', authRoutes);
 app.use('/auth', authRoutes);
@@ -75,26 +78,16 @@ app.use('/index', indexRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/attendance', attendanceRoutes);
 app.use('/admin', adminRoutes);
+app.use('/manager', managerRoutes);
+app.use('/dashboard', dashboardRoutes);
 
-// 404 Handler
-app.all('*', (req, res, next) => {
-    next(new ExpressError('Page Not Found', 404));
-});
 
-// app.use((err, req, res, next) => {
-//     const { statusCode = 500 } = err;
-//     if(!err.message) err.message = 'Oh No, Something Went Wrong!'
-//     res.status(statusCode).render('error', { err });
-//     res.render('layouts/error', { err });
-// });
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
     const statusCode = err.status || 500;
     res.status(statusCode);
-  
-    // Pastikan kita mengoper err ke template EJS
-    // Supaya <%= err.message %> tidak undefined
     res.render('layouts/error', { err });
 });
 
@@ -113,11 +106,12 @@ function calculatePi(n) {
 
 console.log("Approximation of Pi:", calculatePi(10000)); //Approximation of Pi: 3.1414926536
 
+// 404 Handler
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404));
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://127.0.0.1:${PORT}`);
 });
-
-
-

@@ -1,5 +1,5 @@
-const { employeeSchema } = require('../schemas/employee');
-const { attendanceSchema } = require('../schemas/attendance');
+const { employeeSchema } = require('../joi/employee');
+const { attendanceSchema } = require('../joi/attendance');
 const ExpressError = require('../utils/ErrorHandler');
 
 module.exports.validateEmployee = (req, res, next) => {

@@ -1,71 +1,51 @@
 const mongoose = require('mongoose');
-const employee = require('../models/employee');
+const Employee = require('../models/employee');
+const User = require('../models/user');
 
 mongoose.connect('mongodb://127.0.0.1/employee-attendance')
-.then((result) => {
-    console.log('connected to mongodb')
-}).catch((err) => {
-    console.log(err)
-});
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.log('Connection error:', err);
+  });
 
 async function seedEmployees() {
+  try {
+    await Employee.deleteMany({});
+    console.log('Cleared existing employees');
+
+    const employeeUser = await User.findOne({ username: 'employee1' });
+    const managerUser = await User.findOne({ username: 'manager1' });
+
+    if (!employeeUser || !managerUser) {
+      throw new Error('Required user not found. Make sure to run user seeder first.');
+    }
+
     const employees = [
-        {
-            name: "Budi Santoso",
-            email: "budi@example.com",
-            phone: "081234567890",
-            department: "IT",
-            position: "Software Engineer",
-            address: "Jl. Raya, No. 123",
-            status: "Active",
-        },
-        {
-            name: "Siti Rahma",
-            email: "siti@example.com",
-            phone: "081298765432",
-            department: "Human Resources",
-            position: "HR Manager",
-            address: "Jl. Raya, No. 456",
-            status: "Active",
-        },
-        {
-            name: "Andi Pratama",
-            email: "andi@example.com",
-            phone: "081211223344",
-            department: "Marketing",
-            position: "Marketing Executive",
-            address: "Jl. Raya, No. 789",
-            status: "Active",
-        },
-        {
-            name: "Tina Putri",
-            email: "tina@example.com",
-            phone: "081112233445",
-            department: "Sales",
-            position: "Sales Representative",
-            address: "Jl. Raya, No. 321",
-            status: "Active",
-        },
-        {
-            name: "Rudi Santoso",
-            email: "rudi@example.com",
-            phone: "081234567890",
-            department: "IT",
-            position: "Software Engineer",
-            address: "Jl. Raya, No. 123",
-            status: "Active",
-        },
+      {
+        user: employeeUser._id,
+        managerId: managerUser._id,
+        attendance: [
+          {
+            date: new Date(),
+            status: 'present',
+            location: { latitude: -6.2, longitude: 106.8 },
+            confirmedByManager: true,
+            qrCodeUsed: 'qr-1234',
+            managerNote: 'Good punctuality'
+          }
+        ]
+      }
     ];
 
-    try {
-        await employee.deleteMany({}); // Hapus semua data sebelumnya
-        await employee.insertMany(employees);
-        console.log('Employee data seeded!');
-    } catch (error) {
-        console.log('Terjadi kesalahan saat menyimpan data: ',error);
-    } finally {
-        mongoose.disconnect();
-    }
+    await Employee.insertMany(employees);
+    console.log('✅ Employee data seeded!');
+  } catch (error) {
+    console.log('❌ Error during seeding:', error);
+  } finally {
+    mongoose.disconnect();
+  }
 }
 
 seedEmployees();

@@ -1,0 +1,14 @@
+<!-- views/partials/sidebar-employee.ejs -->
+<div id="sidebar-wrapper" class="bg-light border-end">
+    <div class="sidebar-heading p-3 border-bottom fw-bold">
+      Hello, <%= currentUser.profile?.name || currentUser.username %>
+    </div>
+    <div class="list-group list-group-flush">
+      <a href="/dashboard/employee" class="list-group-item list-group-item-action">📊 My Dashboard</a>
+      <a href="/profile" class="list-group-item list-group-item-action">👤 My Profile</a>
+      <a href="/attendance/scan" class="list-group-item list-group-item-action">📸 Scan Attendance</a>
+      <a href="/attendance/history" class="list-group-item list-group-item-action">📅 Attendance History</a>
+      <a href="/logout" class="list-group-item list-group-item-action text-danger">🚪 Logout</a>
+    </div>
+  </div>
+  

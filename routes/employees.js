@@ -7,7 +7,7 @@ const isAuth = require('../middlewares/isAuth');
 const isAuthor = require('../middlewares/isAuthor');
 const isValidObjectId = require('../middlewares/isValidObjectId');
 const { validateEmployee } = require('../middlewares/validator');
-const { employeeSchema } = require('../schemas/employee');
+const { employeeSchema } = require('../joi/employee');
 const wrapAsync = require('../utils/wrapAsync');
 const upload = require('../config/multer');
 

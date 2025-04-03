@@ -3,10 +3,36 @@ const wrapAsync = require('../utils/wrapAsync');
 const ExpressError = require('../utils/ErrorHandler');
 
 // Tampilkan semua karyawan
-module.exports.index = wrapAsync(async (req, res) => {
-    const employees = await Employee.find({});
-    res.render('employees/index', { employees });
-});
+module.exports.index = async (req, res) => {
+  try {
+    const searchQuery = req.query.search || '';
+    let employees;
+
+    if (searchQuery) {
+      employees = await Employee.find()
+        .populate('user')
+        .lean();
+
+      // filter berdasarkan nama di user.profile
+      employees = employees.filter(e =>
+        e.user?.profile?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    } else {
+      employees = await Employee.find().populate('user').lean();
+    }
+
+    res.render('employees/index', {
+      title: 'Manage Employees',
+      employees,
+      searchQuery
+    });
+  } catch (err) {
+    console.error('Error loading employees:', err);
+    req.flash('error', 'Failed to load employees');
+    res.redirect('/dashboard');
+  }
+};
+
 
 
 // Tambah karyawan baru
@@ -36,6 +62,10 @@ module.exports.showEmployee = wrapAsync(async (req, res) => {
         req.flash('error', 'Employee not found!');
         return res.redirect('/employees');
     }
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        req.flash('error', 'Invalid ID');
+        return res.redirect('/employees');
+      }
     res.render('employees/show', { employee });
 });
 

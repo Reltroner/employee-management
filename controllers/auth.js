@@ -44,7 +44,7 @@ module.exports.register = async (req, res, next) => {
         // Tapi jika user biasa sign-up, kita login otomatis.
         if (req.user && req.user.role === 'Admin') {
             req.flash('success', `User ${registeredUser.username} created successfully as ${finalRole}`);
-            return res.redirect('/somewhere'); 
+            return res.redirect('/dashboard/admin'); // Ganti dengan path yang sesuai
         } else {
             // user biasa sedang self-register
             req.login(registeredUser, (err) => {
@@ -70,10 +70,10 @@ module.exports.login = (req, res) => {
     // Jika user adalah Admin, arahkan ke /admin/dashboard (atau path khusus Admin)
     if (req.user.role === 'Admin') {
         req.flash('success_msg', 'Welcome, Admin!');
-        return res.redirect('/admin/dashboard');
+        return res.redirect('/dashboard/admin');
     }else if (req.user.role === 'Manager') {
         req.flash('success_msg', 'Welcome, Manager!');
-        return res.redirect('/manager/dashboard');
+        return res.redirect('/dashboard/manager');
     }
     req.flash('success_msg', 'Login successfully');
     res.redirect('/index');

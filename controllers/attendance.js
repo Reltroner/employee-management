@@ -2,6 +2,9 @@ const Attendance = require('../models/attendance');
 const Employee = require('../models/employee');
 const wrapAsync = require('../utils/wrapAsync');
 const ExpressError = require('../utils/ErrorHandler');
+const QRCode = require('../models/QRCode');
+const Manager = require('../models/manager');
+const User = require('../models/user');
 
 const formatTime = (date) => {
     if (!date) return 'N/A';
@@ -84,6 +87,105 @@ module.exports.createAttendance = async (req, res) => {
     }
 };
 
+module.exports.scanQRCode = async (req, res) => {
+    try {
+      const { code, latitude, longitude } = req.body;
+      const userId = req.user._id;
+  
+      const qr = await QRCode.findOne({ code, used: false });
+      if (!qr) {
+        return res.status(400).json({ message: 'Invalid or expired QR code.' });
+      }
+  
+      // Check QR code expiry
+      if (qr.expiresAt && qr.expiresAt < new Date()) {
+        return res.status(400).json({ message: 'QR code expired.' });
+      }
+  
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).json({ message: 'User not found.' });
+  
+      if (user.role === 'Employee') {
+        await Employee.updateOne(
+          { user: userId },
+          {
+            $push: {
+              attendance: {
+                status: 'present',
+                location: { latitude, longitude },
+                qrCodeUsed: code
+              }
+            }
+          }
+        );
+      } else if (user.role === 'Manager') {
+        await Manager.updateOne(
+          { user: userId },
+          {
+            $push: {
+              attendance: {
+                status: 'present',
+                location: { latitude, longitude },
+                qrCodeUsed: code
+              }
+            }
+          }
+        );
+      }
+  
+      qr.used = true;
+      await qr.save();
+  
+      res.status(200).json({ message: 'Attendance recorded successfully.' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error.' });
+    }
+  };
+  
+module.exports.viewLog = async (req, res) => {
+    console.log("🔍 Admin accessing attendance log");
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const employees = await Employee.find()
+      .populate('user')
+      .lean();
+    const managers = await Manager.find()
+      .populate('user')
+      .lean();
+    const admins = await User.find({ role: 'Admin' }).lean();
+
+    const employeeAttendance = employees.flatMap(emp => {
+      return emp.attendance
+        .filter(a => new Date(a.date) >= today)
+        .map(a => ({ ...a, user: emp.user }));
+    });
+
+    const managerAttendance = managers.flatMap(mgr => {
+      return mgr.attendance
+        .filter(a => new Date(a.date) >= today)
+        .map(a => ({ ...a, user: mgr.user }));
+    });
+
+    const adminAttendance = admins.flatMap(admin => {
+      return (admin.attendance || [])
+        .filter(a => new Date(a.date) >= today)
+        .map(a => ({ ...a, user: admin }));
+    });
+
+    const attendanceRecords = [...employeeAttendance, ...managerAttendance, ...adminAttendance]
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    res.render('attendance/log', { attendanceRecords, user: req.user });
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Failed to load attendance log.');
+    res.redirect('/attendance/log');
+  }
+};
+
 
 // Menampilkan detail absensi berdasarkan ID
 module.exports.showAttendance = async (req, res) => {
@@ -97,6 +199,118 @@ module.exports.showAttendance = async (req, res) => {
     }
     
 };
+
+module.exports.userHistory = async (req, res) => {
+    try {
+      const user = await User.findById(req.user._id);
+      if (!user) {
+        req.flash('error_msg', 'User not found.');
+        return res.redirect('/login');
+      }
+  
+      let attendanceRecords = [];
+  
+      if (user.role === 'Employee') {
+        const employee = await Employee.findOne({ user: user._id });
+        if (employee) attendanceRecords = employee.attendance;
+      } else if (user.role === 'Manager') {
+        const manager = await Manager.findOne({ user: user._id });
+        if (manager) attendanceRecords = manager.attendance;
+      } else {
+        return res.redirect('/dashboard');
+      }
+  
+      // Filter tanggal jika disediakan
+      let { start, end } = req.query;
+      let startDate = start ? new Date(start) : null;
+      let endDate = end ? new Date(end) : null;
+  
+      if (startDate) startDate.setHours(0, 0, 0, 0);
+      if (endDate) endDate.setHours(23, 59, 59, 999);
+  
+      if (startDate && endDate) {
+        attendanceRecords = attendanceRecords.filter(record => {
+          const date = new Date(record.date);
+          return date >= startDate && date <= endDate;
+        });
+      }
+  
+      res.render('attendance/history', {
+        user,
+        attendanceRecords: attendanceRecords.sort((a, b) => new Date(b.date) - new Date(a.date)),
+        startDate: start || '',
+        endDate: end || ''
+      });
+    } catch (err) {
+      console.error(err);
+      req.flash('error_msg', 'Failed to load attendance history.');
+      res.redirect('/dashboard');
+    }
+  };
+
+  module.exports.approveAttendance = async (req, res) => {
+    try {
+      const { userId, index } = req.params;
+  
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+  
+      if (user.role === 'Employee') {
+        const employee = await Employee.findOne({ user: userId });
+        if (!employee || !employee.attendance[index]) throw new Error('Attendance not found');
+  
+        employee.attendance[index].status = 'present';
+        employee.attendance[index].confirmedByManager = true;
+        await employee.save();
+      } else if (user.role === 'Manager') {
+        const manager = await Manager.findOne({ user: userId });
+        if (!manager || !manager.attendance[index]) throw new Error('Attendance not found');
+  
+        manager.attendance[index].status = 'present';
+        manager.attendance[index].confirmedByManager = true;
+        await manager.save();
+      }
+  
+      req.flash('success', 'Attendance approved.');
+      res.redirect('/attendance/log');
+    } catch (err) {
+      console.error(err);
+      req.flash('error_msg', err.message);
+      res.redirect('/attendance/log');
+    }
+  };
+
+  module.exports.rejectAttendance = async (req, res) => {
+    try {
+      const { userId, index } = req.params;
+  
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+  
+      if (user.role === 'Employee') {
+        const employee = await Employee.findOne({ user: userId });
+        if (!employee || !employee.attendance[index]) throw new Error('Attendance not found');
+  
+        employee.attendance[index].status = 'absent';
+        employee.attendance[index].confirmedByManager = true;
+        await employee.save();
+      } else if (user.role === 'Manager') {
+        const manager = await Manager.findOne({ user: userId });
+        if (!manager || !manager.attendance[index]) throw new Error('Attendance not found');
+  
+        manager.attendance[index].status = 'absent';
+        manager.attendance[index].confirmedByManager = true;
+        await manager.save();
+      }
+  
+      req.flash('success', 'Attendance rejected.');
+      res.redirect('/attendance/log');
+    } catch (err) {
+      console.error(err);
+      req.flash('error_msg', err.message);
+      res.redirect('/attendance/log');
+    }
+  };
 
 // Menampilkan form edit absensi
 module.exports.renderEditForm = async (req, res) => {
