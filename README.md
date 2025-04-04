@@ -109,7 +109,7 @@ Licensed under the [MIT License](LICENSE)
 
 ### 👋 Let’s Connect  
 This project is part of my personal full-stack journey and self-branding initiative: **Reltroner Studio**  
-Feel free to reach out via email or [GitHub discussions](https://github.com/Reltroner/employee-management/discussions)
+Feel free to reach out via email
 
 ---
 
