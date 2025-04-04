@@ -32,7 +32,7 @@ A full-stack web application designed to manage employee data and attendance sea
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/RaidanRR/employee-management.git
+git clone https://github.com/Reltroner/employee-management.git
 cd employee-management
 ```
 
@@ -109,7 +109,7 @@ Licensed under the [MIT License](LICENSE)
 
 ### 👋 Let’s Connect  
 This project is part of my personal full-stack journey and self-branding initiative: **Reltroner Studio**  
-Feel free to reach out via email or [GitHub discussions](https://github.com/RaidanRR/employee-management/discussions)
+Feel free to reach out via email or [GitHub discussions](https://github.com/Reltroner/employee-management/discussions)
 
 ---
 
